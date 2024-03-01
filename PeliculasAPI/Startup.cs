@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace PeliculasAPI
 {
@@ -13,8 +13,11 @@ namespace PeliculasAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            //Configuración DbContext
+            var texto = services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
