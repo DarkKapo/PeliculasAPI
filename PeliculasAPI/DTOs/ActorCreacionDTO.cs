@@ -8,6 +8,6 @@ namespace PeliculasAPI.DTOs
         [StringLength(maximumLength: 120, ErrorMessage = "El máximo de letras es {1}")]
         public string Nombre { get; set; }
         public DateTime FechaNacimiento { get; set; }
-        public string Foto { get; set; }
+        public IFormFile Foto { get; set; }
     }
 }
