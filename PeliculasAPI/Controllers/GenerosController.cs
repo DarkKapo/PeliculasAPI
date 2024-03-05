@@ -20,7 +20,7 @@ namespace PeliculasAPI.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<GeneroDTO>>> Get()
-        {
+        { 
             var generos = await context.Generos.ToListAsync();
             return mapper.Map<List<GeneroDTO>>(generos);
         }
@@ -29,10 +29,8 @@ namespace PeliculasAPI.Controllers
         public async Task<ActionResult<GeneroDTO>> Get(int id)
         {
             var genero = await context.Generos.FirstOrDefaultAsync(x => x.Id == id);
-            if (genero == null)
-            {
-                return NotFound();
-            }
+            if (genero == null) return NotFound();
+
             return mapper.Map<GeneroDTO>(genero);
         }
 
@@ -43,6 +41,7 @@ namespace PeliculasAPI.Controllers
             context.Add(genero);
             await context.SaveChangesAsync();
             var generoDTO = mapper.Map<GeneroDTO>(genero);
+            //Devuelve un 201 Created y la ubicación del recurso creado (devuelve la respuesta del endpoint obtenerGenero donde envia el id)
             return new CreatedAtRouteResult("obtenerGenero", new { id = genero.Id }, generoDTO);
         }
 
@@ -60,10 +59,8 @@ namespace PeliculasAPI.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             var existe = await context.Generos.AnyAsync(x => x.Id == id); //verificamos si existe el genero
-            if (!existe)
-            {
-                return NotFound();
-            }
+            if (!existe) return NotFound();
+
             context.Remove(new Genero { Id = id }); //eliminamos el genero usando el id
             await context.SaveChangesAsync();
             return NoContent();
