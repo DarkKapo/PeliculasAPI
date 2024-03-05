@@ -11,7 +11,8 @@ namespace PeliculasAPI.Helpers
             CreateMap<Genero, GeneroDTO>().ReverseMap(); //reverse es para mappear de GeneroDTO a Genero
             CreateMap<GeneroCreacionDTO, Genero>();
             CreateMap<Actor, ActorDTO>().ReverseMap();
-            CreateMap<ActorCreacionDTO, Actor>();
+            CreateMap<ActorCreacionDTO, Actor>().ForMember(x => x.Foto, options => options.Ignore());//Para ignorar el mapeo de la foto
+            CreateMap<ActorPatchDTO, Actor>().ReverseMap();
         }
     }
 }
