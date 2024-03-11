@@ -11,8 +11,10 @@ namespace PeliculasAPI.DTOs
         [TipoArchivoValidacion(grupoTipoArchivo: GrupoTipoArchivo.Imagen)]
         public IFormFile Poster { get; set; }
 
-        [ModelBinder(BinderType = typeof(TypeBinder))]
-        [BindNever]
+        //[ModelBinder(BinderType = typeof(TypeBinder<List<int>>))]
+        //[BindNever]
         public List<int> GenerosIDs { get; set; }
+
+        public List<ActorPeliculasCreacionDTO> Actores { get; set; }
     }
 }

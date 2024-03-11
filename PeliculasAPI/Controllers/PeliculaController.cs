@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PeliculasAPI.Controllers.Entidades;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Helpers;
@@ -44,27 +45,30 @@ namespace PeliculasAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] PeliculaCreacionDTO peliculaCreacionDTO, [FromQuery] List<int> generos)
+        public async Task<ActionResult> Post([FromForm] PeliculaCreacionDTO peliculaCreacionDTO)
         {
-            peliculaCreacionDTO.GenerosIDs = generos;
+            var param = Request.Form["Actores"].ToList(); //var param = Request.Form["parametro"];
+            foreach (var actor in param)
+            {
+                var valorDeserializado = JsonConvert.DeserializeObject<ActorPeliculasCreacionDTO>(actor);
+                peliculaCreacionDTO.Actores.Add(valorDeserializado);
+            }
             var pelicula = mapper.Map<Pelicula>(peliculaCreacionDTO);
 
-            return Ok();
-            
-            //if (peliculaCreacionDTO.Poster != null)
-            //{
-            //    using (var memoryStream = new MemoryStream())
-            //    {
-            //        await peliculaCreacionDTO.Poster.CopyToAsync(memoryStream);
-            //        var contenido = memoryStream.ToArray();
-            //        var extension = Path.GetExtension(peliculaCreacionDTO.Poster.FileName);
-            //        pelicula.Poster = await almacenadorArchivos.GuardarArchivo(contenido, extension, contenedor, peliculaCreacionDTO.Poster.ContentType);
-            //    }
-            //}
-            //context.Add(pelicula);
-            //await context.SaveChangesAsync();
-            //var peliculaDTO = mapper.Map<PeliculaDTO>(pelicula);
-            //return new CreatedAtRouteResult("obtenerPelicula", new { id = pelicula.Id }, peliculaDTO);
+            if (peliculaCreacionDTO.Poster != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await peliculaCreacionDTO.Poster.CopyToAsync(memoryStream);
+                    var contenido = memoryStream.ToArray();
+                    var extension = Path.GetExtension(peliculaCreacionDTO.Poster.FileName);
+                    pelicula.Poster = await almacenadorArchivos.GuardarArchivo(contenido, extension, contenedor, peliculaCreacionDTO.Poster.ContentType);
+                }
+            }
+            context.Add(pelicula);
+            await context.SaveChangesAsync();
+            var peliculaDTO = mapper.Map<PeliculaDTO>(pelicula);
+            return new CreatedAtRouteResult("obtenerPelicula", new { id = pelicula.Id }, peliculaDTO);
         }
 
         [HttpPut("{id}")]
