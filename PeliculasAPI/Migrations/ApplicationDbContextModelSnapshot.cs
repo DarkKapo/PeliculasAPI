@@ -43,7 +43,7 @@ namespace PeliculasAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Actores");
+                    b.ToTable("Actores", (string)null);
                 });
 
             modelBuilder.Entity("PeliculasAPI.Controllers.Entidades.Genero", b =>
@@ -61,7 +61,7 @@ namespace PeliculasAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Generos");
+                    b.ToTable("Generos", (string)null);
                 });
 
             modelBuilder.Entity("PeliculasAPI.Controllers.Entidades.Pelicula", b =>
@@ -89,7 +89,7 @@ namespace PeliculasAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Peliculas");
+                    b.ToTable("Peliculas", (string)null);
                 });
 
             modelBuilder.Entity("PeliculasAPI.Controllers.Entidades.PeliculasActores", b =>
@@ -110,7 +110,7 @@ namespace PeliculasAPI.Migrations
 
                     b.HasIndex("PeliculaId");
 
-                    b.ToTable("PeliculasActores");
+                    b.ToTable("PeliculasActores", (string)null);
                 });
 
             modelBuilder.Entity("PeliculasAPI.Controllers.Entidades.PeliculasGeneros", b =>
@@ -125,7 +125,7 @@ namespace PeliculasAPI.Migrations
 
                     b.HasIndex("PeliculaId");
 
-                    b.ToTable("PeliculasGeneros");
+                    b.ToTable("PeliculasGeneros", (string)null);
                 });
 
             modelBuilder.Entity("PeliculasAPI.Controllers.Entidades.PeliculasActores", b =>

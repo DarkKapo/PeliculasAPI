@@ -44,24 +44,27 @@ namespace PeliculasAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] PeliculaCreacionDTO peliculaCreacionDTO)
+        public async Task<ActionResult> Post([FromForm] PeliculaCreacionDTO peliculaCreacionDTO, [FromQuery] List<int> generos)
         {
+            peliculaCreacionDTO.GenerosIDs = generos;
             var pelicula = mapper.Map<Pelicula>(peliculaCreacionDTO);
+
+            return Ok();
             
-            if (peliculaCreacionDTO.Poster != null)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await peliculaCreacionDTO.Poster.CopyToAsync(memoryStream);
-                    var contenido = memoryStream.ToArray();
-                    var extension = Path.GetExtension(peliculaCreacionDTO.Poster.FileName);
-                    pelicula.Poster = await almacenadorArchivos.GuardarArchivo(contenido, extension, contenedor, peliculaCreacionDTO.Poster.ContentType);
-                }
-            }
-            context.Add(pelicula);
-            await context.SaveChangesAsync();
-            var peliculaDTO = mapper.Map<PeliculaDTO>(pelicula);
-            return new CreatedAtRouteResult("obtenerPelicula", new { id = pelicula.Id }, peliculaDTO);
+            //if (peliculaCreacionDTO.Poster != null)
+            //{
+            //    using (var memoryStream = new MemoryStream())
+            //    {
+            //        await peliculaCreacionDTO.Poster.CopyToAsync(memoryStream);
+            //        var contenido = memoryStream.ToArray();
+            //        var extension = Path.GetExtension(peliculaCreacionDTO.Poster.FileName);
+            //        pelicula.Poster = await almacenadorArchivos.GuardarArchivo(contenido, extension, contenedor, peliculaCreacionDTO.Poster.ContentType);
+            //    }
+            //}
+            //context.Add(pelicula);
+            //await context.SaveChangesAsync();
+            //var peliculaDTO = mapper.Map<PeliculaDTO>(pelicula);
+            //return new CreatedAtRouteResult("obtenerPelicula", new { id = pelicula.Id }, peliculaDTO);
         }
 
         [HttpPut("{id}")]
