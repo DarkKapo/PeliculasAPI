@@ -12,5 +12,7 @@ namespace PeliculasAPI.Controllers.Entidades
         public DateTime FechaEstreno{ get; set; }
         [StringLength(maximumLength: 2100, ErrorMessage = "El máximo de letras es {1}")]
         public string Poster { get; set; }
+        public List<PeliculasActores> PeliculasActores { get; set; }
+        public List<PeliculasGeneros> PeliculasGeneros { get; set; }
     }
 }

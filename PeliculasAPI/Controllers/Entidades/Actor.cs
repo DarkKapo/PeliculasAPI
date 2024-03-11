@@ -10,5 +10,6 @@ namespace PeliculasAPI.Controllers.Entidades
         public string Nombre { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string Foto { get; set; }//Guarda la url de la foto que estará en azure
+        public List<PeliculasActores> PeliculasActores { get; set; }
     }
 }
