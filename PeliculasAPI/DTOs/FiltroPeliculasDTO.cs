@@ -15,5 +15,7 @@
         public int GeneroId { get; set; } = 0;
         public bool EnCines { get; set; } = false;
         public bool ProximosEstrenos { get; set; } = false;
+        public string CampoOrdenar { get; set; }
+        public bool OrdenarAsc { get; set; } = true;
     }
 }

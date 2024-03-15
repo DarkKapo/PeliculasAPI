@@ -7,6 +7,7 @@ using PeliculasAPI.Controllers.Entidades;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Helpers;
 using PeliculasAPI.Servicios;
+using System.Linq.Dynamic.Core;
 
 namespace PeliculasAPI.Controllers
 {
@@ -56,9 +57,22 @@ namespace PeliculasAPI.Controllers
             }
             if (filtroPeliculasDTO.GeneroId != 0)
                 peliculasQueryable = peliculasQueryable.Where(x => x.PeliculasGeneros.Select(y => y.GeneroId).Contains(filtroPeliculasDTO.GeneroId));
+
+            if (!string.IsNullOrEmpty(filtroPeliculasDTO.CampoOrdenar))
+            {
+                try
+                {
+                    var tipoOrden = filtroPeliculasDTO.OrdenarAsc ? "ascending" : "descending";
+                    peliculasQueryable = peliculasQueryable.OrderBy($"{filtroPeliculasDTO.CampoOrdenar} {tipoOrden}");
+                }
+                catch (Exception)
+                {
+                    return BadRequest("No se puede ordenar por el campo especificado");
+                }
+            }
             
             await HttpContext.InsertarParametrosPaginacion(peliculasQueryable, filtroPeliculasDTO.CantidadRegistrosPorPagina);
-            var peliculas = await peliculasQueryable.OrderBy(x => x.Titulo).Paginar(filtroPeliculasDTO.Paginacion).ToListAsync();
+            var peliculas = await peliculasQueryable.Paginar(filtroPeliculasDTO.Paginacion).ToListAsync();
             return mapper.Map<List<PeliculaDTO>>(peliculas);
         }
 
