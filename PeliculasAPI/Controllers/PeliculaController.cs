@@ -13,14 +13,14 @@ namespace PeliculasAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PeliculaController: ControllerBase
+    public class PeliculaController: CustomBaseController
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly IAlmacenadorArchivos almacenadorArchivos;
         private readonly string contenedor = "peliculas";
 
-        public PeliculaController(ApplicationDbContext context, IMapper mapper, IAlmacenadorArchivos almacenadorArchivos)
+        public PeliculaController(ApplicationDbContext context, IMapper mapper, IAlmacenadorArchivos almacenadorArchivos): base(context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -156,32 +156,13 @@ namespace PeliculasAPI.Controllers
         [HttpPatch("{id}")]
         public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<PeliculaPatchDTO> patchDocument)
         {
-            if (patchDocument == null) return BadRequest();
-
-            var peliculaDB = await context.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
-            if (peliculaDB == null) return NotFound();
-
-            var peliculaDTO = mapper.Map<PeliculaPatchDTO>(peliculaDB);
-            patchDocument.ApplyTo(peliculaDTO, ModelState);
-
-            var esValido = TryValidateModel(peliculaDTO);
-            if (!esValido) return BadRequest(ModelState);
-
-            mapper.Map(peliculaDTO, peliculaDB);
-            await context.SaveChangesAsync();
-            return NoContent();
+            return await Patch<Pelicula, PeliculaPatchDTO>(id, patchDocument);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var pelicula = await context.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
-            if (pelicula == null) return NotFound();
-
-            context.Remove(pelicula);
-            await context.SaveChangesAsync();
-            await almacenadorArchivos.BorrarArchivo(pelicula.Poster, contenedor);
-            return NoContent();
+            return await Delete<Pelicula>(id);
         }
     }
 }

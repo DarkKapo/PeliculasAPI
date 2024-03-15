@@ -2,7 +2,7 @@
 
 namespace PeliculasAPI.Controllers.Entidades
 {
-    public class Actor
+    public class Actor: IId
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido")]
