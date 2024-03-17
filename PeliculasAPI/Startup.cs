@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using PeliculasAPI.Helpers;
 using PeliculasAPI.Servicios;
 
@@ -19,9 +21,17 @@ namespace PeliculasAPI
             services.AddAutoMapper(typeof(Startup));
             services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
             services.AddHttpContextAccessor();
+            //srid: 4326 es el srid para latitud y longitud y así buscarlo en el mapa
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+            //Configurar mapper para que reciba el parámetro
+            services.AddSingleton(provider => new MapperConfiguration(config =>
+            {
+                var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                config.AddProfile(new AutoMapperProfiles(geometryFactory));
+            }).CreateMapper());
             //Configuración DbContext
             var texto = services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"), sqlServerOption => sqlServerOption.UseNetTopologySuite()));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddControllers().AddNewtonsoftJson();
             services.AddEndpointsApiExplorer();
