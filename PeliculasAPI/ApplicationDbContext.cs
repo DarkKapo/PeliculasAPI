@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using PeliculasAPI.Controllers.Entidades;
 
 namespace PeliculasAPI
@@ -61,16 +63,14 @@ namespace PeliculasAPI
             //        ClaimValue = "Admin"
             //    });
 
-            //var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
-            //modelBuilder.Entity<SalaDeCine>()
-            //   .HasData(new List<SalaDeCine>
-            //   {
-            //        //new SalaDeCine{Id = 1, Nombre = "Agora", Ubicacion = geometryFactory.CreatePoint(new Coordinate(-69.9388777, 18.4839233))},
-            //        new SalaDeCine{Id = 4, Nombre = "Sambil", Ubicacion = geometryFactory.CreatePoint(new Coordinate(-69.9118804, 18.4826214))},
-            //        new SalaDeCine{Id = 5, Nombre = "Megacentro", Ubicacion = geometryFactory.CreatePoint(new Coordinate(-69.856427, 18.506934))},
-            //        new SalaDeCine{Id = 6, Nombre = "Village East Cinema", Ubicacion = geometryFactory.CreatePoint(new Coordinate(-73.986227, 40.730898))}
-            //   });
+            modelBuilder.Entity<SalaDeCine>()
+               .HasData(new List<SalaDeCine>
+               {
+                    new SalaDeCine{Id = 5, Nombre = "Vespucio", Ubicacion = geometryFactory.CreatePoint(new Coordinate(-33.51554, -70.58515))},
+                    new SalaDeCine{Id = 6, Nombre = "Village East Cinema", Ubicacion = geometryFactory.CreatePoint(new Coordinate(-73.986227, 40.730898))}
+               });
 
             var aventura = new Genero() { Id = 4, Nombre = "Aventura" };
             var animation = new Genero() { Id = 5, Nombre = "Animación" };
