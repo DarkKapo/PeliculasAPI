@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using PeliculasAPI.Helpers;
 using PeliculasAPI.Servicios;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace PeliculasAPI
 {
@@ -34,6 +38,22 @@ namespace PeliculasAPI
                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnection"), sqlServerOption => sqlServerOption.UseNetTopologySuite()));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddControllers().AddNewtonsoftJson();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = false,
+                       ValidateAudience = false,
+                       ValidateLifetime = true,
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(
+                   Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
+                       ClockSkew = TimeSpan.Zero
+                   }
+               );
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c => {
                 c.OperationFilter<CustomFromBodyOperationFilter>();
@@ -55,6 +75,8 @@ namespace PeliculasAPI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
