@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using NetTopologySuite.Geometries;
 using PeliculasAPI.Controllers.Entidades;
 using PeliculasAPI.DTOs;
@@ -11,6 +12,8 @@ namespace PeliculasAPI.Helpers
         {
             CreateMap<Genero, GeneroDTO>().ReverseMap(); //reverse es para mappear de GeneroDTO a Genero
             CreateMap<GeneroCreacionDTO, Genero>();
+
+            CreateMap<IdentityUser, UsuarioDTO>();
             //Mapea de un punto (ubicación) a una latitud y longitud
             CreateMap<SalaDeCine, SalaDeCineDTO>()
                 .ForMember(x => x.Latitud, x => x.MapFrom(y => y.Ubicacion.Y))

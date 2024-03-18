@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using PeliculasAPI.Controllers.Entidades;
+using System.Security.Claims;
 
 namespace PeliculasAPI
 {
@@ -37,7 +38,7 @@ namespace PeliculasAPI
 
             var passwordHasher = new PasswordHasher<IdentityUser>();
 
-            var username = "darkkapo@gmail.com";
+            var username = "felipe@hotmail.com";
 
             var usuarioAdmin = new IdentityUser()
             {
